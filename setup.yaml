@@ -1,5 +1,43 @@
 ---
 - hosts: all
   tasks:
-    - name: hello
-      shell: echo hello world
+    - name: Create Dev dir
+      file:
+        path: /home/ubuntu/Dev
+        state: directory
+      become_user: ubuntu
+
+
+    - name: Checkout tmux conf
+      git:
+        repo: 'https://github.com/daghub/tmuxconf'
+        dest: /home/ubuntu/Dev/tmuxconf
+      become_user: ubuntu
+
+    - name: install tmux
+      apt:
+        name: tmux
+        state: present
+
+    - name: create tmux symlink
+      file:
+        src: /home/ubuntu/Dev/tmuxconf/tmux.conf
+        dest: /home/ubuntu/.tmux.conf
+        state: link
+      become_user: ubuntu
+
+    - name: Ensure tmux session in .bashrc
+      blockinfile:
+        path: "{{ ansible_env.HOME }}/.bashrc"
+        marker: '# {mark} ANSIBLE MANAGED BLOCK - tmux'
+        # insertbefore: BOF
+        block: |
+          if [[ -z "$TMUX" ]]; then
+              ID=$(/usr/bin/tmux ls | grep -v1 attached | cut -d: -f1)
+              if [[ -z "${ID}" ]]; then
+                  /usr/bin/tmux new-session
+              else
+                  /usr/bin/tmux attach-session -t "${ID}"
+              fi
+          fi
+      become_user: ubuntu
