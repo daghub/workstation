@@ -3,34 +3,30 @@
   tasks:
     - name: Create Dev dir
       file:
-        path: /home/ubuntu/Dev
+        path: '{{ ansible_env.HOME }}/Dev'
         state: directory
-      become_user: ubuntu
 
 
     - name: Checkout tmux conf
       git:
         repo: 'https://github.com/daghub/tmuxconf'
-        dest: /home/ubuntu/Dev/tmuxconf
-      become_user: ubuntu
+        dest: '{{ ansible_env.HOME }}/Dev/tmuxconf'
 
-    - name: install tmux
+    - name: Install tmux
       apt:
         name: tmux
         state: present
 
-    - name: create tmux symlink
+    - name: Create tmux symlink
       file:
-        src: /home/ubuntu/Dev/tmuxconf/tmux.conf
-        dest: /home/ubuntu/.tmux.conf
+        src: '{{ ansible_env.HOME }}/Dev/tmuxconf/tmux.conf'
+        dest: '{{ ansible_env.HOME }}/.tmux.conf'
         state: link
-      become_user: ubuntu
 
     - name: Ensure tmux session in .bashrc
       blockinfile:
         path: "{{ ansible_env.HOME }}/.bashrc"
         marker: '# {mark} ANSIBLE MANAGED BLOCK - tmux'
-        # insertbefore: BOF
         block: |
           if [[ -z "$TMUX" ]]; then
               ID=$(/usr/bin/tmux ls | grep -v1 attached | cut -d: -f1)
@@ -40,9 +36,8 @@
                   /usr/bin/tmux attach-session -t "${ID}"
               fi
           fi
-      become_user: ubuntu
 
-    - name: import kelleyk apt key
+    - name: Import kelleyk apt key
       apt_key:
         url: 'https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x873503a090750cdaeb0754d93ff0e01eeaafc9cd'
         state: present
@@ -65,3 +60,9 @@
         name: emacs
         path: /usr/bin/emacs26
       become: true
+
+    - name: Install spacemacs
+      git:
+        repo: 'https://github.com/syl20bnr/spacemacs'
+        dest: '{{ ansible_env.HOME }}/.emacs.d'
+        version: develop
