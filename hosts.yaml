@@ -1,0 +1,7 @@
+all:
+  hosts:
+    cloud:
+      ansible_user:
+        ubuntu
+      ansible_host:
+        172.30.196.161
