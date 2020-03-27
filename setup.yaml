@@ -9,7 +9,7 @@
 
     - name: Checkout tmux conf
       git:
-        repo: 'https://github.com/daghub/tmuxconf'
+        repo: 'git@github.com:daghub/tmuxconf.git'
         dest: '{{ ansible_env.HOME }}/Dev/tmuxconf'
 
     - name: Install tmux
@@ -65,11 +65,11 @@
       git:
         repo: 'https://github.com/syl20bnr/spacemacs'
         dest: '{{ ansible_env.HOME }}/.emacs.d'
-        version: develop
+        version: f25ad36d79db418b7c0e398b67110359cd3f3f69
 
     - name: Install dotspacemacs
       git:
-        repo: 'https://github.com/daghub/dotspacemacs'
+        repo: 'git@github.com:daghub/dotspacemacs.git'
         dest: '{{ ansible_env.HOME }}/Dev/dotspacemacs'
 
     - name: Install dotspacemacs link
