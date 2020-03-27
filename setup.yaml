@@ -60,4 +60,8 @@
         state: present
       become: true
 
-
+    - name: Make emacs26 default
+      alternatives:
+        name: emacs
+        path: /usr/bin/emacs26
+      become: true
