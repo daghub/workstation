@@ -41,3 +41,23 @@
               fi
           fi
       become_user: ubuntu
+
+    - name: import kelleyk apt key
+      apt_key:
+        url: 'https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x873503a090750cdaeb0754d93ff0e01eeaafc9cd'
+        state: present
+      become: true
+
+    - name: Add emacs apt repository
+      apt_repository:
+        repo: 'ppa:kelleyk/emacs'
+        update_cache: yes
+      become: true
+
+    - name: Install emacs26
+      apt:
+        name: emacs26
+        state: present
+      become: true
+
+
