@@ -66,3 +66,14 @@
         repo: 'https://github.com/syl20bnr/spacemacs'
         dest: '{{ ansible_env.HOME }}/.emacs.d'
         version: develop
+
+    - name: Install dotspacemacs
+      git:
+        repo: 'https://github.com/daghub/dotspacemacs'
+        dest: '{{ ansible_env.HOME }}/Dev/dotspacemacs'
+
+    - name: Install dotspacemacs link
+      file:
+        src: '{{ ansible_env.HOME }}/Dev/dotspacemacs/dotspacemacs'
+        dest: '{{ ansible_env.HOME }}/.spacemacs'
+        state: link
